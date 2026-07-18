@@ -32,8 +32,15 @@ function addBookToLibrary(title, author, pageCount, isRead) {
 /* ************************************************************************** */
 /*                                    TESTS                                   */
 /* ************************************************************************** */
-let theHobbit = new Book("The Hobbit", "J.R.R. Tolkien", 295, false);
-console.log(theHobbit.info());
-console.log(theHobbit);
+function displayLibrary() {
+	for (book of myLibrary) {
+		console.log(book.info());
+		console.log(`ID of ${book.title}: ${book.id}`);
+	}
+}
 
-console.log(`Prototype Hobbit ${Object.getPrototypeOf(theHobbit)}`);
+addBookToLibrary("ouaftitle", "ouafauthor", 123, false);
+addBookToLibrary("oueftitle", "ouefauthor", 456, true);
+addBookToLibrary("ouiftitle", "ouifauthor", 789, true);
+addBookToLibrary("wooftitle", "woofauthor", 10, false);
+displayLibrary();
