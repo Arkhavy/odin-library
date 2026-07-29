@@ -37,13 +37,17 @@ function createLabel(text, id) {
 	const label = document.createElement("label");
 	label.textContent = text;
 	label.htmlFor = id;
+	label.className = "formItem";
 	return (label);
 }
 
 function createInput(id, type) {
 	const input = document.createElement("input");
+	input.name = id;
 	input.id = id;
 	input.type = type;
+	input.required = true;
+	input.className = "formItem";
 	return (input);
 }
 
@@ -51,12 +55,15 @@ function createButton(text, type) {
 	const button = document.createElement("button");
 	button.textContent = text;
 	button.type = type;
-	button.formTarget = "_self";
+	button.className = "formItem";
 	return (button);
 }
 
 function createForm() {
 	const newForm = document.createElement("form");
+	newForm.name = `bookCreationForm`;
+	newForm.action = "";
+	newForm.method = "POST";
 
 	/* ********************************** TITLE ********************************* */
 	newForm.appendChild(createLabel("Book title:", "title"));
@@ -74,6 +81,20 @@ function createForm() {
 	newForm.appendChild(createLabel("Book read status:", "isRead"));
 	newForm.appendChild(createInput("isRead", "text"));
 	newForm.appendChild(createButton("Submit", "submit"));
+
+	/* ************************** SUBMIT EVENT LISTENER ************************* */
+	newForm.addEventListener("submit", (e) => {
+		let formData = new FormData(newForm);
+		let output = [];
+		for (const [key, value] of formData) {
+			output.push(value);
+		}
+		addBookToLibrary(output[0], output[1], output[2], output[3]);
+		displayLibrary();
+		bookForm.removeChild(newForm);
+		e.preventDefault();
+	});
+
 	return (newForm);
 }
 
@@ -85,6 +106,7 @@ bookFormButton.addEventListener("click", () => {
 /*                                    TESTS                                   */
 /* ************************************************************************** */
 function displayLibrary() {
+	container.innerHTML = "";
 	for (book of myLibrary) {
 		const newDiv = document.createElement("div");
 		newDiv.className = "bookCard";
