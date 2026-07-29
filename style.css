@@ -35,3 +35,7 @@ button:hover {
 button:active {
 	background-color: grey;
 }
+
+.formItem {
+	margin: 5px 15px;
+}
