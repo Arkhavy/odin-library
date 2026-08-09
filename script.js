@@ -112,6 +112,22 @@ function displayLibrary() {
 		newDiv.className = "bookCard";
 		newDiv.textContent = book.info();
 		newDiv.textContent += ` ID : ${book.id}`;
+		newDiv.dataset.id = book.id;
+
+		const newButton = document.createElement("button");
+		newButton.textContent = "Delete";
+		newButton.type = "button";
+		newButton.classList = "bookButton";
+		newButton.addEventListener("click", () => {
+			for (book of myLibrary) {
+				if (newDiv.dataset.id === book.id) {
+					myLibrary.pop(book);
+					container.removeChild(newDiv);
+				}
+			}
+		});
+		newDiv.appendChild(newButton);
+
 		container.appendChild(newDiv);
 	}
 }
