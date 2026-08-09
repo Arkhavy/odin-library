@@ -9,7 +9,7 @@ function Book(title, author, pageCount, isRead) {
 		throw Error("You must use the 'new' operator to call the constructor");
 	}
 
-	/* ******************************* ATTRIBUTES ******************************* */
+	/* ******************************* PROPERTIES ******************************* */
 	this.title = title; // String
 	this.author = author; // String
 	this.pageCount = pageCount; // Number
@@ -18,7 +18,16 @@ function Book(title, author, pageCount, isRead) {
 
 	/* ********************************* METHODS ******************************** */
 	this.info = function () {
-		return (`${this.title} by ${this.author}, ${this.pageCount} pages, ${isRead}.`);
+		return (`${this.title} by ${this.author}, ${this.pageCount} pages, ${this.isRead}.`);
+	}
+
+	this.update = function () {
+		const value = prompt(`Update book ${this.title} read status:`);
+		if (!value) {
+			return;
+		}
+		
+		this.isRead = value;
 	}
 }
 
@@ -105,28 +114,47 @@ bookFormButton.addEventListener("click", () => {
 /* ************************************************************************** */
 /*                                    TESTS                                   */
 /* ************************************************************************** */
+function createBookButton(text, eventListener) {
+	const newButton = document.createElement("button");
+	newButton.type = "button";
+	newButton.classList = "bookButton";
+	newButton.textContent = text;
+	newButton.addEventListener("click", eventListener);
+	return (newButton);
+}
+
 function displayLibrary() {
 	container.innerHTML = "";
-	for (book of myLibrary) {
+	for (const book of myLibrary) {
 		const newDiv = document.createElement("div");
 		newDiv.className = "bookCard";
 		newDiv.textContent = book.info();
 		newDiv.textContent += ` ID : ${book.id}`;
 		newDiv.dataset.id = book.id;
 
-		const newButton = document.createElement("button");
-		newButton.textContent = "Delete";
-		newButton.type = "button";
-		newButton.classList = "bookButton";
-		newButton.addEventListener("click", () => {
-			for (book of myLibrary) {
+		/* ****************************** UPDATE BUTTON ***************************** */
+		const updateButton = createBookButton("Update read status", () => {
+			for (const book of myLibrary) {
 				if (newDiv.dataset.id === book.id) {
-					myLibrary.pop(book);
-					container.removeChild(newDiv);
+					book.update();
+					displayLibrary();
+					return;
 				}
 			}
 		});
-		newDiv.appendChild(newButton);
+		newDiv.appendChild(updateButton);
+
+		/* ****************************** DELETE BUTTON ***************************** */
+		const deleteButton = createBookButton("Delete", () => {
+			for (const book of myLibrary) {
+				if (newDiv.dataset.id === book.id) {
+					myLibrary.pop(book);
+					container.removeChild(newDiv);
+					return;
+				}
+			}
+		});
+		newDiv.appendChild(deleteButton);
 
 		container.appendChild(newDiv);
 	}
